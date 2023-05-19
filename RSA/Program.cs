@@ -1,15 +1,25 @@
 ﻿// p i q powinny być losowymi liczbami pierwszymi
 using System.Numerics;
 
-BigInteger p = 97;
-BigInteger q = 79;
+List<int> listOfPossiblePrimeNumberForP = new List<int>();
+listOfPossiblePrimeNumberForP = findPrimeFromRange(19000, 19100);
+List<int> listOfPossiblePrimeNumberForQ = new List<int>();
+listOfPossiblePrimeNumberForQ = findPrimeFromRange(2500, 5000);
+Random random = new Random();
+BigInteger p = choseRandomNumberFromList(listOfPossiblePrimeNumberForP, random);
+BigInteger q = choseRandomNumberFromList(listOfPossiblePrimeNumberForQ, random);
 
+for (int i = 0; i < 10000; i++)
+    choseRandomNumberFromList(listOfPossiblePrimeNumberForP, random);
 
+/*BigInteger p = 9001;//97;
+BigInteger q = 19001;//89;*/
 BigInteger n = CountN(p, q);
 BigInteger phiN = EulerFunction(p, q);
 BigInteger e = FindE(phiN);
 BigInteger d = InverseModulo(e, phiN);
-
+Console.WriteLine("P = " + p);
+Console.WriteLine("q = " + q);
 Console.WriteLine("N =" + n);
 Console.WriteLine("Funkcja Eulera phi(n) = " + phiN);
 Console.WriteLine("E = " + e);
@@ -19,7 +29,7 @@ KeyValuePair<BigInteger, BigInteger> publicKey = new KeyValuePair<BigInteger, Bi
 KeyValuePair<BigInteger, BigInteger> privateKey = new KeyValuePair<BigInteger, BigInteger>(n, d);
 
 //m to blok wiadomosci i nie moze byc wiekszy niz n 
-BigInteger m = 5000;
+BigInteger m = 9000;
 //zaszyfrowanie wiadomosci
 BigInteger c = Encrypt(m, publicKey);
 Console.WriteLine("C = " + c);
@@ -48,7 +58,7 @@ BigInteger Decrypt(BigInteger c, KeyValuePair<BigInteger, BigInteger> privateK)
     BigInteger d = privateK.Value;
     if (c > n) throw new Exception("Nie dozwolona operacja c nie moze byc wieksze od n"); //zalozenie m < n
     BigInteger result = 1;
-    for(int i = 0; i < d; i++) 
+    for (int i = 0; i < d; i++)
     {
         result *= c; //Zeby uniknac wielkich liczb naprzemian potegowanie i modulo
         result %= n;
@@ -115,4 +125,35 @@ void ChangeValues(ref BigInteger a, ref BigInteger b)
     BigInteger temp = a;
     a = b;
     b = temp;
+}
+
+//funkcja znajdujaca liczby pierwsze z danego zakresu
+List<int> findPrimeFromRange(int minNumber, int maxNumber)
+{
+    List<int> result = new List<int>();
+    for(int i = minNumber; i< maxNumber; i++)
+        if(checkIfPrime(i))
+            result.Add(i);
+    return result;
+}
+//funkcja sprawdzajaca czy dana liczba jest pierwsza
+bool checkIfPrime(int number)
+{
+    if(number < 2)
+        return false;
+    if(number == 2 || number == 3)
+        return true;
+    if(number % 2 == 0)
+        return false;
+    int sqrt = (int)Math.Sqrt(number);
+    for(int i = 3; i <= sqrt; i += 2)
+        if(number % i == 0)
+            return false;
+    return true;
+}
+//funkcja wybierajaca losowa liczbe z listy
+int choseRandomNumberFromList(List<int> list, Random random)
+{
+    int randomIndex = random.Next(0, list.Count);
+    return list[randomIndex];
 }
