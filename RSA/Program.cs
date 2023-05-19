@@ -27,11 +27,11 @@ Console.WriteLine("C = " + c);
 BigInteger m2 = Decrypt(c, privateKey);
 Console.WriteLine("M =" + m2);
 //funkcja szyfrujaca wzor c =  (m^e) mod n
-BigInteger Encrypt(BigInteger m, KeyValuePair<BigInteger, BigInteger> publicK)
+BigInteger Encrypt(BigInteger m, KeyValuePair<BigInteger, BigInteger> publicKey)
 {
-    BigInteger n = publicK.Key;
-    BigInteger e = publicK.Value;
-    if (m > n) throw new Exception("Nie dozwolona operacja m nie moze byc wieksze od n"); //zalozenie m < n
+    BigInteger n = publicKey.Key;
+    BigInteger e = publicKey.Value;
+    if (m >= n) throw new Exception("Nie dozwolona operacja m nie moze byc wieksze od n"); //zalozenie m < n
     BigInteger result = 1;
     for (int i = 0; i < e; i++)
     {
@@ -41,11 +41,11 @@ BigInteger Encrypt(BigInteger m, KeyValuePair<BigInteger, BigInteger> publicK)
     return result;
 }
 //funkcja odszyfrujaca wzor m =  (c^d) mod n
-BigInteger Decrypt(BigInteger c, KeyValuePair<BigInteger, BigInteger> privateK)
+BigInteger Decrypt(BigInteger c, KeyValuePair<BigInteger, BigInteger> privateKey)
 {
-    BigInteger n = privateK.Key;
-    BigInteger d = privateK.Value;
-    if (c > n) throw new Exception("Nie dozwolona operacja c nie moze byc wieksze od n"); //zalozenie m < n
+    BigInteger n = privateKey.Key;
+    BigInteger d = privateKey.Value;
+    if (c >= n) throw new Exception("Nie dozwolona operacja c nie moze byc wieksze od n"); //zalozenie m < n
     BigInteger result = 1;
     for (int i = 0; i < d; i++)
     {
