@@ -1,45 +1,54 @@
 ﻿// p i q powinny być losowymi liczbami pierwszymi
-long p = 7;//97;
-long q = 11;// 89;
+using System.Numerics;
 
-long n = CountN(p, q);
-long phiN = EulerFunction(p, q);
-long e = FindE(phiN);
-long d = InverseModulo(e, phiN);
+BigInteger p = 11;//97;
+BigInteger q = 7;// 89;
+
+BigInteger n = CountN(p, q);
+BigInteger phiN = EulerFunction(p, q);
+BigInteger e = FindE(phiN);
+BigInteger d = InverseModulo(e, phiN);
 
 Console.WriteLine("N =" + n);
 Console.WriteLine("Funkcja Eulera phi(n) = " + phiN);
 Console.WriteLine("E = " + e);
 Console.WriteLine("D = " + d);
 
-KeyValuePair<long, long> publicKey = new KeyValuePair<long, long>(n, e);
-KeyValuePair<long, long> privateKey = new KeyValuePair<long, long>(n, d);
+KeyValuePair<BigInteger, BigInteger> publicKey = new KeyValuePair<BigInteger, BigInteger>(n, e);
+KeyValuePair<BigInteger, BigInteger> privateKey = new KeyValuePair<BigInteger, BigInteger>(n, d);
 
 //m to blok wiadomosci i nie moze byc wiekszy niz n 
-long m = 89;
+BigInteger m = 89;
 //zaszyfrowanie wiadomosci
-long c = pow(m, e) % n;
+BigInteger c = pow(m, e) % n;
 Console.WriteLine("C = " + c);
+
+
+
+
+
 //odszyfrowanie wiadomosci
-long m2 = pow(c, d) % n;
+BigInteger m2 = pow(c, d) % n;
 Console.WriteLine("M =" + m2);
 
+Console.WriteLine("\n" + pow(c, d));
+
 //Funkcja zwraca n = p * q
-long CountN(long p, long q)
+BigInteger CountN(BigInteger p, BigInteger q)
 {
     return p * q;
 }
 //Funkcja zwraca phiN = (p - 1) * (q - 1)
-long EulerFunction(long p, long q)
+BigInteger EulerFunction(BigInteger p, BigInteger q)
 {
     return (p - 1) * (q - 1);
 }
 //Funkcja zwracajaca najmniejszy wspolny dzielnik dwoch liczb
-long NWD(long a, long b)
+BigInteger NWD(BigInteger a, BigInteger b)
 {
     while (b != 0)
     {
-        long c = a % b;
+        BigInteger c = a % b;
         a = b;
         b = c;
         //Console.WriteLine($"A = {a}  B = {b}  C = {c}");
@@ -47,9 +56,9 @@ long NWD(long a, long b)
     return a;
 }
 // Funkcja znajdujaca najmniejsze pasujace e
-long FindE(long phiN) //phiN to wynik EulerFunction (p-1)*(q-1)
+BigInteger FindE(BigInteger phiN) //phiN to wynik EulerFunction (p-1)*(q-1)
 {
-    long e = 2; //najniejszy możliwy wynik gdzie 1 < e < phiN
+    BigInteger e = 2; //najniejszy możliwy wynik gdzie 1 < e < phiN
     while (NWD(e, phiN) != 1)
     {
         e++;
@@ -57,9 +66,9 @@ long FindE(long phiN) //phiN to wynik EulerFunction (p-1)*(q-1)
     return e;
 }
 //Funkcja zwracająca odwrotność modularną
-long InverseModulo(long number, long modulo)
+BigInteger InverseModulo(BigInteger number, BigInteger modulo)
 {
-    long u = 1, w = number, x = 0, z = modulo;
+    BigInteger u = 1, w = number, x = 0, z = modulo;
     while (w != 0)
     {
         if (w < z)
@@ -67,7 +76,7 @@ long InverseModulo(long number, long modulo)
             ChangeValues(ref u, ref x);
             ChangeValues(ref w, ref z);
         }
-        long q = w / z;
+        BigInteger q = w / z;
         u -= q * x;
         w -= q * z;
     }
@@ -79,16 +88,16 @@ long InverseModulo(long number, long modulo)
     return x;
 }
 //Funkcja zamieniajaca wartosci dwoch zmiennych
-void ChangeValues(ref long a, ref long b)
+void ChangeValues(ref BigInteger a, ref BigInteger b)
 {
-    long temp = a;
+    BigInteger temp = a;
     a = b;
     b = temp;
 }
 //funkcja zwracająca potęge liczby o danej podstawie i wykladniku
-long pow(long baseNumber, long power)
+BigInteger pow(BigInteger baseNumber, BigInteger power)
 {
-    long result = 1;
+    BigInteger result = 1;
     for (int i = 0; i < power; i++)
         result *= baseNumber;
     return result;
