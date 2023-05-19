@@ -1,8 +1,9 @@
 ﻿// p i q powinny być losowymi liczbami pierwszymi
 using System.Numerics;
 
-BigInteger p = 11;//97;
-BigInteger q = 7;// 89;
+BigInteger p = 97;
+BigInteger q = 79;
+
 
 BigInteger n = CountN(p, q);
 BigInteger phiN = EulerFunction(p, q);
@@ -18,21 +19,42 @@ KeyValuePair<BigInteger, BigInteger> publicKey = new KeyValuePair<BigInteger, Bi
 KeyValuePair<BigInteger, BigInteger> privateKey = new KeyValuePair<BigInteger, BigInteger>(n, d);
 
 //m to blok wiadomosci i nie moze byc wiekszy niz n 
-BigInteger m = 89;
+BigInteger m = 5000;
 //zaszyfrowanie wiadomosci
-BigInteger c = pow(m, e) % n;
+BigInteger c = Encrypt(m, publicKey);
 Console.WriteLine("C = " + c);
-
-
-
-
-
 //odszyfrowanie wiadomosci
-BigInteger m2 = pow(c, d) % n;
+BigInteger m2 = Decrypt(c, privateKey);
 Console.WriteLine("M =" + m2);
 
-Console.WriteLine("\n" + pow(c, d));
-
+//funkcja szyfrujaca wzor c =  (m^e) mod n
+BigInteger Encrypt(BigInteger m, KeyValuePair<BigInteger, BigInteger> publicK)
+{
+    BigInteger n = publicK.Key;
+    BigInteger e = publicK.Value;
+    if (m > n) throw new Exception("Nie dozwolona operacja m nie moze byc wieksze od n"); //zalozenie m < n
+    BigInteger result = 1;
+    for (int i = 0; i < e; i++)
+    {
+        result *= m; //Zeby uniknac wielkich liczb naprzemian potegowanie i modulo
+        result %= n;
+    }
+    return result;
+}
+//funkcja odszyfrujaca wzor m =  (c^d) mod n
+BigInteger Decrypt(BigInteger c, KeyValuePair<BigInteger, BigInteger> privateK)
+{
+    BigInteger n = privateK.Key;
+    BigInteger d = privateK.Value;
+    if (c > n) throw new Exception("Nie dozwolona operacja c nie moze byc wieksze od n"); //zalozenie m < n
+    BigInteger result = 1;
+    for(int i = 0; i < d; i++) 
+    {
+        result *= c; //Zeby uniknac wielkich liczb naprzemian potegowanie i modulo
+        result %= n;
+    }
+    return result;
+}
 //Funkcja zwraca n = p * q
 BigInteger CountN(BigInteger p, BigInteger q)
 {
@@ -93,12 +115,4 @@ void ChangeValues(ref BigInteger a, ref BigInteger b)
     BigInteger temp = a;
     a = b;
     b = temp;
-}
-//funkcja zwracająca potęge liczby o danej podstawie i wykladniku
-BigInteger pow(BigInteger baseNumber, BigInteger power)
-{
-    BigInteger result = 1;
-    for (int i = 0; i < power; i++)
-        result *= baseNumber;
-    return result;
 }
