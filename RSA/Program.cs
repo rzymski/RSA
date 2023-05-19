@@ -1,8 +1,5 @@
-﻿Console.WriteLine("Hello, World!");
-
-//Console.WriteLine(EulerFunction(11, 7));
-
-int p = 13;//13;
+﻿// p i q powinny być losowymi liczbami pierwszymi
+int p = 17;//13;
 int q = 11;// 97;
 
 int n = CountN(p, q);
@@ -14,6 +11,9 @@ Console.WriteLine("N =" + n);
 Console.WriteLine("Funkcja Eulera phiN = " + phiN);
 Console.WriteLine("E = " + e);
 Console.WriteLine("D = " + d);
+
+KeyValuePair<int, int> publicKey = new KeyValuePair<int, int>(n, e);
+KeyValuePair<int, int> privateKey = new KeyValuePair<int, int>(n, d);
 
 int CountN(int p, int q)
 {
@@ -36,7 +36,7 @@ int NWD(int a, int b)
     return a;
 }
 
-// phiN to wynik EulerFunction
+// phiN to wynik EulerFunction (p-1)*(q-1)
 int FindE(int phiN)
 {
     int e = 2; //najniejszy możliwy wynik gdzie 1 < e < phiN
@@ -47,7 +47,7 @@ int FindE(int phiN)
     return e;
 }
 
-//Funkcja zwracająca odwrotność modularną wykorzystuje Rozszerzony algorytm Euklidesa
+//Funkcja zwracająca odwrotność modularną
 int InverseModulo(int number, int modulo)
 {
     int u = 1, w = number, x = 0, z = modulo;
