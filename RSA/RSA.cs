@@ -1,14 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace RSANamespace
 {
+    public static class Encryption
+    {
+        public static List<BigInteger> EncryptMessage(string message, KeyValuePair<BigInteger, BigInteger> publicKey)
+        {
+            List<BigInteger> result = new List<BigInteger>();
+            for(int i = 0; i < message.Length; i++)
+                result.Add(RSA.Encrypt((int)message[i], publicKey));
+            return result;
+        }
+
+        public static string DecryptMessage(List<BigInteger> message, KeyValuePair<BigInteger, BigInteger> privateKey)
+        {
+            string result = "";
+            for(int i=0; i<message.Count; i++)
+            {
+                BigInteger asciiResult = RSA.Decrypt(message[i], privateKey);
+                if (asciiResult > 255) throw new Exception($"Kod ascii przekroczyl wartosc 255 przy odszyfrowywaniu i wynosi {asciiResult}");
+                result += Convert.ToChar((int)asciiResult);
+            }
+            return result;
+        }
+    }
+
     public static class RSA
     {
+        //funkcja tworzaca publicznt klucz na podstawie p i q
+        public static KeyValuePair<BigInteger, BigInteger> CreatePublicKey(BigInteger p, BigInteger q)
+        {
+            //sprawdzenie czy p i q sa pierwsze
+            if (!MyRandom.checkIfPrime((int)p) || !MyRandom.checkIfPrime((int)q)) throw new Exception("P lub Q nie jest liczba pierwsza. Blad tworzenia klucza publicznego");
+            BigInteger n = RSA.CountN(p, q);
+            BigInteger phiN = RSA.EulerFunction(p, q);
+            BigInteger e = RSA.FindE(phiN);
+            KeyValuePair<BigInteger, BigInteger> publicKey = new KeyValuePair<BigInteger, BigInteger>(n, e);
+            return publicKey;
+        }
+        //funkcja tworzaca prywatny klucz na podstawie p i q
+        public static KeyValuePair<BigInteger, BigInteger> CreatePrivateKey(BigInteger p, BigInteger q)
+        {
+            if (!MyRandom.checkIfPrime((int)p) || !MyRandom.checkIfPrime((int)q)) throw new Exception("P lub Q nie jest liczba pierwsza. Blad tworzenia klucza prywatnego");
+            BigInteger n = RSA.CountN(p, q);
+            BigInteger phiN = RSA.EulerFunction(p, q);
+            BigInteger e = RSA.FindE(phiN);
+            BigInteger d = RSA.InverseModulo(e, phiN);
+            KeyValuePair<BigInteger, BigInteger> privateKey = new KeyValuePair<BigInteger, BigInteger>(n, d);
+            return privateKey;
+        }
         //funkcja szyfrujaca wzor c =  (m^e) mod n
         public static BigInteger Encrypt(BigInteger m, KeyValuePair<BigInteger, BigInteger> publicKey)
         {
@@ -50,23 +90,23 @@ namespace RSANamespace
         //Funkcja zwracajaca najwiekszy wspolny dzielnik dwoch liczb
         public static BigInteger NWD(BigInteger a, BigInteger b)
         {
+            if(a <= 0 ||  b <= 0) throw new Exception("Nie mozna obliczyc NWD jesli jakas wartosc nie jest dodatnia");
             while (b != 0)
             {
                 BigInteger c = a % b;
                 a = b;
                 b = c;
-                //Console.WriteLine($"A = {a}  B = {b}  C = {c}");
             }
             return a;
         }
         // Funkcja znajdujaca najmniejsze pasujace e
         public static BigInteger FindE(BigInteger phiN) //phiN to wynik EulerFunction (p-1)*(q-1)
         {
+            if(phiN < 4) throw new Exception("PhiN jest za male nie mozliwe jest znalezienie e");
             BigInteger e = 3; //najniejszy możliwy wynik gdzie 1 < e < phiN i e jest zawsze nieparzyste, bo phiN jest zawsze parzyste
             while (NWD(e, phiN) != 1)
-            {
                 e+=2;
-            }
+            if (e > phiN) throw new Exception("Nie znaleziono odpowieniego e");
             return e;
         }
         //Funkcja zwracająca odwrotność modularną
