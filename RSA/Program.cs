@@ -3,8 +3,8 @@ using RSANamespace;
 
 Random random = new Random();
 // p i q powinny być losowymi liczbami pierwszymi
-BigInteger p = MyRandom.choseRandomNumberFromList(100, 9000, random);
-BigInteger q = MyRandom.choseRandomNumberFromList(100, 9000, random);
+BigInteger p = MyRandom.ChoseRandomNumberFromList(100, 9000, random);
+BigInteger q = MyRandom.ChoseRandomNumberFromList(100, 9000, random);
 BigInteger n = RSA.CountN(p, q);
 BigInteger phiN = RSA.EulerFunction(p, q);
 BigInteger e = RSA.FindE(phiN);
@@ -17,17 +17,21 @@ Console.WriteLine("E = " + e);
 Console.WriteLine("D = " + d);
 KeyValuePair<BigInteger, BigInteger> publicKey = new KeyValuePair<BigInteger, BigInteger>(n, e);
 KeyValuePair<BigInteger, BigInteger> privateKey = new KeyValuePair<BigInteger, BigInteger>(n, d);
+Console.WriteLine($"Klucz publiczny (n, e) = ({publicKey.Key},{publicKey.Value})");
+Console.WriteLine($"Klucz prywatny (n, d) = ({privateKey.Key},{privateKey.Value})");
 //m to blok wiadomosci i nie moze byc wiekszy niz n 
+//np. mozna zmieniac znaki na wartosci ascii czyli 'A' = 65
 BigInteger m = 65;
-//zaszyfrowanie wiadomosci
+Console.WriteLine("Blok m = "+m);
+//zaszyfrowanie bloku wiadomosci
 BigInteger c = RSA.Encrypt(m, publicKey);
-Console.WriteLine("C = " + c);
-//odszyfrowanie wiadomosci
+Console.WriteLine("Zaszyfrowanie bloku m:\nC = " + c);
+//odszyfrowanie bloku wiadomosci
 BigInteger m2 = RSA.Decrypt(c, privateKey);
-Console.WriteLine("M =" + m2);
+Console.WriteLine("Odszyfrowanie bloku m:\nM =" + m2);
 
-BigInteger p2 = 97;
-BigInteger q2 = 89;
+BigInteger p2 = 199;
+BigInteger q2 = 251;
 BigInteger n2 = RSA.CountN(p2, q2);
 BigInteger phiN2 = RSA.EulerFunction(p2, q2);
 BigInteger e2 = RSA.FindE(phiN2);
@@ -43,11 +47,11 @@ Console.WriteLine("D = " + d2);
 Console.WriteLine($"Klucz publiczny (n, e) = ({publicKey2.Key},{publicKey2.Value})");
 Console.WriteLine($"Klucz prywatny (n, d) = ({privateKey2.Key},{privateKey2.Value})");
 string message = "POTEGA I MOC";
-Console.WriteLine($"\n\nWiadomosc = {message}\n");
+Console.WriteLine($"\nWiadomosc = {message}\n");
 List<BigInteger> encryptedMessage = Encryption.EncryptMessage(message, publicKey2);
 Console.WriteLine(string.Join(", ", encryptedMessage));
 string decryptedMessage = Encryption.DecryptMessage(encryptedMessage, privateKey2);
-Console.WriteLine($"\nRozszyfrowana wiadomosc = {decryptedMessage}");
+Console.WriteLine($"\nRozszyfrowana wiadomosc = {decryptedMessage}\n\n\n");
 
 
 //wypisanie wszystkich liczb pierwszych z przedzialu od 0 do 100000

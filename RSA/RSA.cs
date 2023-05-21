@@ -31,7 +31,7 @@ namespace RSANamespace
         public static KeyValuePair<BigInteger, BigInteger> CreatePublicKey(BigInteger p, BigInteger q)
         {
             //sprawdzenie czy p i q sa pierwsze
-            if (!MyRandom.checkIfPrime((int)p) || !MyRandom.checkIfPrime((int)q)) throw new Exception("P lub Q nie jest liczba pierwsza. Blad tworzenia klucza publicznego");
+            if (!MyRandom.CheckIfPrime((int)p) || !MyRandom.CheckIfPrime((int)q)) throw new Exception("P lub Q nie jest liczba pierwsza. Blad tworzenia klucza publicznego");
             BigInteger n = RSA.CountN(p, q);
             BigInteger phiN = RSA.EulerFunction(p, q);
             BigInteger e = RSA.FindE(phiN);
@@ -41,7 +41,7 @@ namespace RSANamespace
         //funkcja tworzaca prywatny klucz na podstawie p i q
         public static KeyValuePair<BigInteger, BigInteger> CreatePrivateKey(BigInteger p, BigInteger q)
         {
-            if (!MyRandom.checkIfPrime((int)p) || !MyRandom.checkIfPrime((int)q)) throw new Exception("P lub Q nie jest liczba pierwsza. Blad tworzenia klucza prywatnego");
+            if (!MyRandom.CheckIfPrime((int)p) || !MyRandom.CheckIfPrime((int)q)) throw new Exception("P lub Q nie jest liczba pierwsza. Blad tworzenia klucza prywatnego");
             BigInteger n = RSA.CountN(p, q);
             BigInteger phiN = RSA.EulerFunction(p, q);
             BigInteger e = RSA.FindE(phiN);
@@ -143,24 +143,23 @@ namespace RSANamespace
     public static class MyRandom
     {
         //funkcja wybierajaca losowa liczbe z listy liczb pierwszych ktore znajduja sie w zakresie pomiedzy min i max
-        public static int choseRandomNumberFromList(int minNumber, int maxNumber, Random random)
+        public static int ChoseRandomNumberFromList(int minNumber, int maxNumber, Random random)
         {
-            List<int> list = new List<int>();
-            list = findPrimeFromRange(minNumber, maxNumber);
+            List<int> list = FindPrimeFromRange(minNumber, maxNumber);
             int randomIndex = random.Next(0, list.Count);
             return list[randomIndex];
         }
         //funkcja znajdujaca liczby pierwsze z danego zakresu
-        public static List<int> findPrimeFromRange(int minNumber, int maxNumber)
+        public static List<int> FindPrimeFromRange(int minNumber, int maxNumber)
         {
             List<int> result = new List<int>();
             for (int i = minNumber; i < maxNumber; i++)
-                if (checkIfPrime(i))
+                if (CheckIfPrime(i))
                     result.Add(i);
             return result;
         }
         //funkcja sprawdzajaca czy dana liczba jest pierwsza
-        public static bool checkIfPrime(int number)
+        public static bool CheckIfPrime(int number)
         {
             if (number < 2)
                 return false;
