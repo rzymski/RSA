@@ -3,8 +3,8 @@ using RSANamespace;
 
 Random random = new Random();
 // p i q powinny być losowymi liczbami pierwszymi
-BigInteger p = MyRandom.ChoseRandomNumberFromList(100, 9000, random);
-BigInteger q = MyRandom.ChoseRandomNumberFromList(100, 9000, random);
+BigInteger p = MyRandom.ChoseRandomNumberFromList(100, 9000, random);//199999;
+BigInteger q = MyRandom.ChoseRandomNumberFromList(100, 9000, random);//109841;
 BigInteger n = RSA.CountN(p, q);
 BigInteger phiN = RSA.EulerFunction(p, q);
 BigInteger e = RSA.FindE(phiN);
@@ -22,7 +22,7 @@ Console.WriteLine($"Klucz prywatny (n, d) = ({privateKey.Key},{privateKey.Value}
 //m to blok wiadomosci i nie moze byc wiekszy niz n 
 //np. mozna zmieniac znaki na wartosci ascii czyli 'A' = 65
 BigInteger m = 65;
-Console.WriteLine("Blok m = "+m);
+Console.WriteLine("Blok m = " + m);
 //zaszyfrowanie bloku wiadomosci
 BigInteger c = RSA.Encrypt(m, publicKey);
 Console.WriteLine("Zaszyfrowanie bloku m:\nC = " + c);
@@ -54,6 +54,6 @@ string decryptedMessage = Encryption.DecryptMessage(encryptedMessage, privateKey
 Console.WriteLine($"\nRozszyfrowana wiadomosc = {decryptedMessage}\n\n\n");
 
 
-//wypisanie wszystkich liczb pierwszych z przedzialu od 0 do 100000
-/*List<int> lista = MyRandom.findPrimeFromRange(0, 100000);
+//wypisanie wszystkich liczb pierwszych z przedzialu
+/*List<int> lista = MyRandom.FindPrimeFromRange(100000, 200000);
 Console.WriteLine(string.Join(", ", lista));*/

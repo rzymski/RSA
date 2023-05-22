@@ -56,7 +56,7 @@ namespace RSANamespace
             BigInteger e = publicKey.Value;
             if (m >= n) throw new Exception("Nie dozwolona operacja m nie moze byc wieksze od n"); //zalozenie m < n
             BigInteger result = 1;
-            for (int i = 0; i < e; i++)
+            for (BigInteger i = 0; i < e; i++)
             {
                 result *= m; //Zeby uniknac wielkich liczb naprzemian potegowanie i modulo
                 result %= n;
@@ -70,7 +70,7 @@ namespace RSANamespace
             BigInteger d = privateKey.Value;
             if (c >= n) throw new Exception("Nie dozwolona operacja c nie moze byc wieksze od n"); //zalozenie m < n
             BigInteger result = 1;
-            for (int i = 0; i < d; i++)
+            for (BigInteger i = 0; i < d; i++)
             {
                 result *= c; //Zeby uniknac wielkich liczb naprzemian potegowanie i modulo
                 result %= n;
